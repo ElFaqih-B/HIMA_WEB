@@ -1,0 +1,40 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - HIMATKN</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icon.png') }}">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,line-clamp"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    primary: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 800: '#166534', 900: '#113f2e', 950: '#06261b' },
+                    slate: { 50: '#fcfefb', 100: 'rgba(17,63,46,.16)', 200: 'rgba(17,63,46,.25)', 300: '#bbf7d0', 400: '#45614f', 500: '#45614f', 600: '#166534', 700: '#113f2e', 800: '#06261b', 900: '#06261b' }
+                },
+                fontFamily: {
+                    /* Memaksa semua tag Tailwind menggunakan Inter */
+                    sans: ['Inter', 'sans-serif'],
+                    serif: ['Inter', 'sans-serif'],
+                    mono: ['Inter', 'monospace']
+                },
+                animation: { 'fade-in-up': 'fadeInUp 0.5s ease-out forwards' },
+                keyframes: { fadeInUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
+            }
+        }
+    }
+</script>
+
+<style>
+    /* Global Styles */
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Inter', sans-serif; font-weight: 700; letter-spacing: -0.01em; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .dropdown-menu { display: none; transform: translateX(-10px); }
+    .dropdown-menu.show { display: block; transform: translateX(0); }
+</style>

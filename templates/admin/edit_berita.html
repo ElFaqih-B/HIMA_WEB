@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    {% include 'components/admin_head.html' %}
+</head>
+<body class="text-slate-800 flex h-screen overflow-hidden font-sans">
+    {% include 'components/font.html' %}
+    {% include 'components/admin_sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden">
+        <header class="bg-white h-20 px-8 flex items-center border-b border-slate-100 shrink-0">
+            <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Perbarui Informasi</h1>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-8">
+            <div class="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 max-w-3xl shadow-sm">
+                <div class="flex items-center gap-3 mb-6">
+                    <a href="/admin/berita" class="text-slate-400 hover:text-slate-600 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </a>
+                    <h2 class="text-xl font-bold text-slate-800">✏️ Edit Artikel Berita</h2>
+                </div>
+                
+                <form action="/update_berita/{{ berita.id }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Judul Berita</label>
+                        <input type="text" name="judul" value="{{ berita.judul }}" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 focus:border-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Konten Berita</label>
+                        <textarea name="konten" rows="6" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 focus:border-transparent transition">{{ berita.konten }}</textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Cover Saat Ini</label>
+                        <img src="{{ berita.gambar_url }}" class="w-32 h-20 rounded-xl object-cover border border-slate-200 mb-3">
+                        
+                        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ganti Foto Baru (Kosongkan jika tidak ingin diubah)</label>
+                        <input type="file" name="gambar_berita" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-900 border border-slate-200 rounded-xl bg-slate-50 p-2">
+                    </div>
+                    
+                    <div class="pt-2 flex gap-3">
+                        <button type="submit" class="px-8 py-3.5 bg-primary-900 hover:bg-primary-950 text-white font-bold rounded-xl transition shadow-md shadow-primary-900/10">Simpan Pembaruan</button>
+                        <a href="/admin/berita" class="px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-center">Batal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

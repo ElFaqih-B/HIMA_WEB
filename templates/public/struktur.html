@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Struktur Kepengurusan - HIMATKN</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/icon.png') }}">
+    
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+    --font-primary:var(--font-primary);
+    --font-heading:var(--font-primary);
+    --font-mono:var(--font-primary);
+}
+</style>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+    --font-primary:var(--font-primary);
+    --font-heading:var(--font-primary);
+    --font-mono:var(--font-primary);
+}
+</style>
+
+
+    <script src="https://cdn.tailwindcss.com?plugins=line-clamp,forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        primary: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 800: '#166534', 900: '#113f2e', 950: '#06261b' },
+                        slate: { 50: '#fcfefb', 100: 'rgba(17,63,46,.16)', 200: 'rgba(17,63,46,.25)', 300: '#bbf7d0', 400: '#45614f', 500: '#45614f', 600: '#166534', 700: '#113f2e', 800: '#06261b', 900: '#06261b' }
+                    },
+                    fontFamily: { 
+                        sans: ['"IBM Plex Sans"', 'sans-serif'], serif: ['var(--font-heading)', 'serif'], mono: ['var(--font-mono)', 'monospace']
+                    },
+                    animation: { 
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'grow-down': 'growDown 0.6s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(15px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        growDown: { '0%': { transform: 'scaleY(0)' }, '100%': { transform: 'scaleY(1)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: var(--font-primary); background-color: #fcfefb; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ── Kartu Member & Hover Effects ── */
+        .member-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); background-color: #fcfefb; }
+        .member-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(17, 63, 46, 0.1); border-color: #06261b; }
+
+        /* ── Badge Jabatan (Mono Theme) ── */
+        .badge-pembimbing { background: #d97706; color: #fff; }
+        .badge-ketua      { background: #06261b; color: #fcfefb; }
+        .badge-wakil      { border: 1px solid #06261b; color: #06261b; background: transparent;}
+        .badge-sekretaris { border: 1px solid #166534; color: #166534; background: transparent; }
+        .badge-bendahara  { border: 1px solid #166534; color: #166534; background: transparent; }
+        .badge-default    { background: rgba(17,63,46,.16); color: #06261b; }
+
+        /* ── Garis Penghubung Tier Animasi ── */
+        .tier-connector { display: flex; flex-direction: column; align-items: center; gap: 0; }
+        .tier-connector-line { width: 1px; height: 2rem; background: #06261b; transform-origin: top; animation: growDown 0.6s ease-out forwards; opacity: 0.3;}
+        .tier-connector-dot { width: 5px; height: 5px; border-radius: 50%; background: #06261b; margin: -1px 0; opacity: 0; animation: fadeIn 0.3s ease-out 0.4s forwards; }
+
+        /* ── Label Tier ── */
+        .tier-label { display: flex; align-items: center; gap: 0.5rem; color: #45614f; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .tier-label::before, .tier-label::after { content: ''; flex: 1; height: 1px; background: rgba(17,63,46,.16); }
+
+        /* ── Smooth Accordion (CSS Grid Trick) ── */
+        .accordion-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .accordion-wrapper.open { grid-template-rows: 1fr; }
+        .accordion-inner { overflow: hidden; }
+        
+        /* ── Animasi Custom Dropdown ── */
+        .dropdown-menu-custom { display: none; opacity: 0; transform: translateY(-10px) scale(0.95); transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top; }
+        .dropdown-menu-custom.show { display: block; opacity: 1; transform: translateY(0) scale(1); }
+    </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col min-h-screen overflow-x-hidden">
+
+    {% include 'components/public_header.html' %}
+
+    <main class="flex-grow pt-32 pb-24">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center max-w-3xl mx-auto mb-10 animate-fade-in border-b border-slate-100 pb-8">
+                <span class="inline-block px-4 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase text-primary-900 bg-primary-50 rounded border border-primary-200 mb-4">
+                    Kabinet Nexus 2026
+                </span>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold tracking-tight text-slate-900">
+                    Susunan Kepengurusan
+                </h2>
+                <p class="mt-4 text-slate-500 font-medium leading-relaxed max-w-xl mx-auto">
+                    Mengenal lebih dekat para penggerak roda organisasi yang berdedikasi mewujudkan visi bersama.
+                </p>
+            </div>
+
+            {% if struktur_grouped %}
+
+            <div class="flex justify-center mb-10 relative z-30 animate-fade-in" style="animation-delay: 100ms;">
+                <div class="inline-flex rounded p-1 bg-slate-50 border border-slate-100">
+                    <button id="btn-mode-tab" onclick="setMode('tab')"
+                        class="px-6 py-2 rounded font-mono text-xs uppercase tracking-widest font-bold transition-all duration-200 bg-slate-900 text-slate-50 shadow-sm active:scale-95">
+                        Per Divisi
+                    </button>
+                    <button id="btn-mode-full" onclick="setMode('full')"
+                        class="px-6 py-2 rounded font-mono text-xs uppercase tracking-widest font-bold transition-all duration-200 bg-transparent text-slate-500 hover:text-slate-800 active:scale-95">
+                        Lihat Semua
+                    </button>
+                </div>
+            </div>
+
+            {% macro render_org_grid(anggota_list) %}
+                {% set tier1 = [] %}{% set tier2 = [] %}{% set tier3 = [] %}
+                {% for person in anggota_list %}
+                    {% set jl = person.jabatan | lower %}
+                    {% if ('ketua' in jl or 'kepala' in jl or 'pembimbing' in jl or 'dosen' in jl) and 'wakil' not in jl %}
+                        {% if tier1.append(person) %}{% endif %}
+                    {% elif 'wakil' in jl %}
+                        {% if tier2.append(person) %}{% endif %}
+                    {% else %}
+                        {% if tier3.append(person) %}{% endif %}
+                    {% endif %}
+                {% endfor %}
+
+                <div class="w-full space-y-2">
+
+                    {% if tier1 %}
+                    <div class="flex flex-wrap justify-center gap-4">
+                        {% for person in tier1 %}
+                        {% set jl = person.jabatan | lower %}
+                        <div class="member-card group border {% if 'pembimbing' in jl or 'dosen' in jl %}border-amber-600/30{% else %}border-slate-200{% endif %} rounded p-5 w-full max-w-[280px] text-center animate-fade-in opacity-0" style="animation-delay: {{ loop.index0 * 100 }}ms;">
+                            <div class="h-28 w-28 overflow-hidden rounded-full border border-slate-200 mx-auto mb-4 bg-slate-50">
+                                <img src="{{ person.foto_url if person.foto_url and person.foto_url != '/static/uploads/' else '/static/img/default-avatar.png' }}"
+                                     alt="{{ person.nama }}" class="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0">
+                            </div>
+                            <span class="inline-block px-3 py-1 font-mono text-[9px] font-bold tracking-widest uppercase rounded mb-2 transition-colors duration-300
+                                {% if 'pembimbing' in jl or 'dosen' in jl %}badge-pembimbing{% else %}badge-ketua{% endif %}">
+                                {{ person.jabatan }}
+                            </span>
+                            <p class="text-lg font-serif font-bold text-slate-900 leading-tight" title="{{ person.nama }}">{{ person.nama }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if tier1 and (tier2 or tier3) %}
+                    <div class="tier-connector mx-auto">
+                        <div class="tier-connector-line"></div>
+                        <div class="tier-connector-dot"></div>
+                    </div>
+                    {% endif %}
+
+                    {% if tier2 %}
+                    <div class="tier-label mx-4 animate-fade-in opacity-0" style="animation-delay: 200ms;">Wakil</div>
+                    <div class="flex flex-wrap justify-center gap-3">
+                        {% for person in tier2 %}
+                        <div class="member-card group border border-slate-200 rounded p-4 w-44 sm:w-48 text-center animate-fade-in opacity-0" style="animation-delay: {{ 200 + (loop.index0 * 100) }}ms;">
+                            <div class="h-20 w-20 overflow-hidden rounded-full border border-slate-200 mx-auto mb-3 bg-slate-50">
+                                <img src="{{ person.foto_url if person.foto_url and person.foto_url != '/static/uploads/' else '/static/img/default-avatar.png' }}"
+                                     alt="{{ person.nama }}" class="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0">
+                            </div>
+                            <span class="inline-block px-2 py-0.5 font-mono text-[8px] font-bold tracking-widest uppercase rounded mb-2 badge-wakil transition-colors duration-300">
+                                {{ person.jabatan }}
+                            </span>
+                            <p class="text-base font-serif font-bold text-slate-900 leading-tight" title="{{ person.nama }}">{{ person.nama }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if tier3 and tier2 %}
+                    <div class="tier-connector mx-auto">
+                        <div class="tier-connector-line"></div>
+                        <div class="tier-connector-dot"></div>
+                    </div>
+                    {% endif %}
+
+                    {% if tier3 %}
+                    <div class="tier-label mx-4 animate-fade-in opacity-0" style="animation-delay: 400ms;">Staff Divisi</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {% for person in tier3 %}
+                        {% set jl = person.jabatan | lower %}
+                        <div class="member-card group border border-slate-200 rounded p-4 text-center animate-fade-in opacity-0" style="animation-delay: {{ 400 + (loop.index0 * 50) }}ms;">
+                            <div class="h-16 w-16 overflow-hidden rounded-full border border-slate-100 mx-auto mb-3 bg-slate-50">
+                                <img src="{{ person.foto_url if person.foto_url and person.foto_url != '/static/uploads/' else '/static/img/default-avatar.png' }}"
+                                     alt="{{ person.nama }}" class="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0">
+                            </div>
+                            <span class="inline-block px-1.5 py-0.5 font-mono text-[7px] font-bold tracking-widest uppercase rounded mb-2 transition-colors duration-300
+                                {% if 'sekretaris' in jl %}badge-sekretaris
+                                {% elif 'bendahara' in jl %}badge-bendahara
+                                {% else %}badge-default{% endif %}">
+                                {{ person.jabatan }}
+                            </span>
+                            <p class="text-[13px] font-serif font-bold text-slate-900 leading-snug line-clamp-2">{{ person.nama }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                </div>
+            {% endmacro %}
+
+            {% set pembimbing_divisi = namespace(nama='', anggota=[]) %}
+            {% set root_divisi = namespace(nama='', anggota=[]) %}
+            {% set other_divisi = {} %}
+            
+            {% for div_name, anggota_list in struktur_grouped.items() %}
+                {% if 'pembimbing' in div_name | lower or 'penasihat' in div_name | lower %}
+                    {% set pembimbing_divisi.nama = div_name %}
+                    {% set pembimbing_divisi.anggota = anggota_list %}
+                {% elif div_name | lower == 'internal' or div_name | lower == 'bph' %}
+                    {% set root_divisi.nama = div_name %}
+                    {% set root_divisi.anggota = anggota_list %}
+                {% else %}
+                    {% set _ = other_divisi.update({div_name: anggota_list}) %}
+                {% endif %}
+            {% endfor %}
+
+            <div id="view-tab">
+                <div class="flex flex-col items-center mb-12 relative z-40 animate-fade-in opacity-0" style="animation-delay: 200ms;">
+                    <label class="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest mb-3">Pilih Divisi / Bagian</label>
+                    
+                    <div class="relative w-full max-w-sm" id="custom-dropdown-container">
+                        <button type="button" onclick="toggleCustomDropdown()" 
+                            class="w-full bg-slate-50 border border-slate-200 hover:border-slate-900 text-slate-900 font-serif font-bold text-lg py-3 px-6 rounded flex items-center justify-between transition-all duration-300 active:scale-[0.98]">
+                            <span id="selected-divisi-text">Pilih Divisi...</span>
+                            <svg id="dropdown-chevron" class="w-5 h-5 text-slate-500 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div id="custom-dropdown-menu" class="dropdown-menu-custom absolute w-full mt-2 bg-slate-50 border border-slate-100 rounded shadow-xl overflow-hidden z-50">
+                            <ul class="py-1 max-h-64 overflow-y-auto no-scrollbar">
+                                {% for divisi_nama, anggota_list in struktur_grouped.items() %}
+                                <li>
+                                    <button type="button" onclick="selectDivisi('{{ loop.index }}', '{{ divisi_nama }}')" 
+                                        class="w-full text-left px-6 py-2.5 font-serif text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:pl-8 transition-all duration-200">
+                                        {{ divisi_nama }}
+                                    </button>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="min-h-[400px]">
+                    {% for divisi_nama, anggota_list in struktur_grouped.items() %}
+                    <div id="tab-{{ loop.index }}" class="tab-content {% if not loop.first %}hidden{% endif %}">
+                        
+                        <div class="text-center mb-12 animate-fade-in opacity-0">
+                            <h3 class="text-3xl font-serif font-bold text-slate-900">{{ divisi_nama }}</h3>
+                            <div class="w-12 h-px bg-slate-400 mx-auto mt-4"></div>
+                        </div>
+
+                        {{ render_org_grid(anggota_list) }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="view-full" class="hidden space-y-6">
+
+                {% if pembimbing_divisi.nama %}
+                <div class="bg-slate-50 border border-slate-200 rounded overflow-hidden mb-6 animate-fade-in opacity-0">
+                    <div class="flex items-center gap-3 px-6 py-4 bg-slate-100 border-b border-slate-200">
+                        <span class="font-mono text-[10px] text-slate-500 font-bold uppercase tracking-widest">Dosen pembimbing</span>
+                        <span class="ml-auto font-serif font-bold text-slate-900">{{ pembimbing_divisi.nama }}</span>
+                    </div>
+                    <div class="p-8">
+                        {{ render_org_grid(pembimbing_divisi.anggota) }}
+                    </div>
+                </div>
+                
+                {% if root_divisi.nama or other_divisi %}
+                <div class="tier-connector mx-auto -mt-6 mb-2">
+                    <div class="tier-connector-line" style="height:3rem"></div>
+                    <div class="tier-connector-dot"></div>
+                </div>
+                {% endif %}
+                {% endif %}
+
+                {% if root_divisi.nama %}
+                <div class="bg-slate-50 border border-slate-200 rounded overflow-hidden animate-fade-in opacity-0" style="animation-delay: 200ms;">
+                    <div class="flex items-center gap-3 px-6 py-4 bg-slate-900">
+                        <span class="font-mono text-[10px] text-slate-400 font-bold uppercase tracking-widest">Pimpinan Utama</span>
+                        <span class="ml-auto font-serif font-bold text-slate-50">{{ root_divisi.nama }}</span>
+                    </div>
+                    <div class="p-8">
+                        {{ render_org_grid(root_divisi.anggota) }}
+                    </div>
+                </div>
+
+                {% if other_divisi %}
+                <div class="tier-connector mx-auto">
+                    <div class="tier-connector-line" style="height:2.5rem"></div>
+                    <div class="tier-connector-dot"></div>
+                    <div class="font-mono text-[9px] font-bold text-slate-400 tracking-widest uppercase mt-1">Divisi</div>
+                </div>
+                {% endif %}
+                {% endif %}
+
+                {% if other_divisi %}
+                <div class="space-y-3">
+                    {% for div_name, anggota in other_divisi.items() %}
+                    <div class="divisi-panel bg-slate-50 rounded border border-slate-200 overflow-hidden animate-fade-in opacity-0" style="animation-delay: {{ 300 + (loop.index0 * 100) }}ms;">
+                        <button onclick="toggleDivisi('divisi-{{ loop.index }}')"
+                            class="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-slate-100 transition-colors duration-200 group active:bg-slate-200">
+                            <div class="flex items-center gap-4">
+                                <span class="font-serif font-bold text-slate-900 text-lg">{{ div_name }}</span>
+                                <span class="font-mono text-[9px] uppercase tracking-widest text-slate-500 font-bold border border-slate-200 px-2 py-0.5 rounded transition-colors group-hover:bg-slate-200">
+                                    {{ anggota | length }} Personil
+                                </span>
+                            </div>
+                            <svg id="chevron-divisi-{{ loop.index }}"
+                                class="w-5 h-5 text-slate-400 transition-transform duration-300 rotate-0"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        
+                        <div id="divisi-{{ loop.index }}" class="accordion-wrapper {% if loop.first %}open{% endif %} border-t border-slate-200">
+                            <div class="accordion-inner">
+                                <div class="px-6 pb-8 pt-6">
+                                    {{ render_org_grid(anggota) }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% else %}
+            <div class="mt-12 animate-fade-in">
+                <div class="rounded border border-slate-200 bg-slate-50 p-12 text-center">
+                    <p class="font-mono text-sm font-bold text-slate-500 uppercase tracking-widest">Data pengurus belum tersedia.</p>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </main>
+
+    {% include 'components/footer.html' %}
+
+    <script>
+        function setMode(mode) {
+            const viewTab  = document.getElementById('view-tab');
+            const viewFull = document.getElementById('view-full');
+            const btnTab   = document.getElementById('btn-mode-tab');
+            const btnFull  = document.getElementById('btn-mode-full');
+            const active   = ['bg-slate-900', 'text-slate-50', 'shadow-sm'];
+            const inactive = ['bg-transparent', 'text-slate-500', 'hover:text-slate-800'];
+
+            if (mode === 'tab') {
+                viewTab.classList.remove('hidden'); viewFull.classList.add('hidden');
+                btnTab.classList.remove(...inactive); btnTab.classList.add(...active);
+                btnFull.classList.remove(...active);  btnFull.classList.add(...inactive);
+            } else {
+                viewTab.classList.add('hidden'); viewFull.classList.remove('hidden');
+                btnFull.classList.remove(...inactive); btnFull.classList.add(...active);
+                btnTab.classList.remove(...active);   btnTab.classList.add(...inactive);
+            }
+        }
+
+        function toggleCustomDropdown() {
+            const menu = document.getElementById('custom-dropdown-menu');
+            const chevron = document.getElementById('dropdown-chevron');
+            const isOpen = menu.classList.contains('show');
+            if (isOpen) { menu.classList.remove('show'); chevron.style.transform = 'rotate(0deg)'; } 
+            else { menu.classList.add('show'); chevron.style.transform = 'rotate(180deg)'; }
+        }
+
+        function selectDivisi(indexId, text) {
+            document.getElementById('selected-divisi-text').innerText = text;
+            toggleCustomDropdown();
+            document.querySelectorAll('.tab-content').forEach(el => { el.classList.add('hidden'); el.classList.remove('animate-fade-in'); });
+            const targetTab = document.getElementById('tab-' + indexId);
+            targetTab.classList.remove('hidden');
+            void targetTab.offsetWidth;
+            targetTab.classList.add('animate-fade-in');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            {% if struktur_grouped %}
+                const firstDivisiName = "{{ struktur_grouped.keys() | list | first }}";
+                document.getElementById('selected-divisi-text').innerText = firstDivisiName;
+            {% endif %}
+        });
+
+        document.addEventListener('click', function(event) {
+            const dropdownContainer = document.getElementById('custom-dropdown-container');
+            if (dropdownContainer && !dropdownContainer.contains(event.target)) {
+                const menu = document.getElementById('custom-dropdown-menu');
+                if (menu.classList.contains('show')) { menu.classList.remove('show'); document.getElementById('dropdown-chevron').style.transform = 'rotate(0deg)'; }
+            }
+        });
+
+        function toggleDivisi(panelId) {
+            const body    = document.getElementById(panelId);
+            const chevron = document.getElementById('chevron-' + panelId);
+            const isOpen  = body.classList.contains('open');
+            if(isOpen) { body.classList.remove('open'); chevron.style.transform = 'rotate(0deg)'; } 
+            else { body.classList.add('open'); chevron.style.transform = 'rotate(180deg)'; }
+        }
+    </script>
+</body>
+</html>

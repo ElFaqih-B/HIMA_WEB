@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akses Sistem - HIMATKN</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
+    
+    {% include 'components/font.html' %}
+</head>
+<body class="flex items-center justify-center min-h-screen bg-slate-50 relative overflow-hidden">
+    
+    <div class="absolute inset-0 bg-hero-grid bg-[size:32px_32px] opacity-60"></div>
+
+    <div class="relative z-10 w-full max-w-md bg-white p-10 rounded-3xl shadow-xl border border-slate-200 m-4">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-primary-950 text-primary-50 rounded-2xl flex items-center justify-center mx-auto mb-4 font-mono font-bold text-2xl tracking-widest shadow-lg">
+                t½
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">Admin Login</h1>
+            <p class="font-mono text-xs uppercase tracking-widest text-slate-500 mt-2">Poltek Nuklir BRIN</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login') }}" class="space-y-5">
+            <div>
+                <label for="username" class="block font-mono text-xs uppercase tracking-widest text-primary-900 mb-2 font-bold">Username</label>
+                <input type="text" id="username" name="username" required 
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 font-mono text-sm transition text-slate-800">
+            </div>
+            <div>
+                <label for="password" class="block font-mono text-xs uppercase tracking-widest text-primary-900 mb-2 font-bold">Password</label>
+                <input type="password" id="password" name="password" required 
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 font-mono text-sm transition text-slate-800">
+            </div>
+            
+            <button type="submit" class="w-full py-3.5 px-4 bg-primary-900 hover:bg-primary-950 text-white font-mono font-bold uppercase tracking-widest text-sm rounded-xl transition shadow-md mt-6 active:scale-95">
+                Masuk Sistem
+            </button>
+        </form>
+
+        <div class="mt-8 text-center border-t border-slate-100 pt-6">
+            <a href="/" class="font-mono text-xs text-slate-400 hover:text-primary-900 transition underline">← Kembali ke Halaman Publik</a>
+        </div>
+    </div>
+</body>
+</html>

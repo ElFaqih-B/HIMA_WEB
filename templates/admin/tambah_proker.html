@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Program Kerja - Admin</title>
+    {% include 'components/font.html' %}
+</head>
+<body class="bg-slate-50 text-slate-800 flex h-[100dvh] overflow-hidden font-sans relative">
+    
+    {% include 'components/admin_sidebar.html' %}
+
+    <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-slate-50/50">
+        
+        <header class="bg-white h-16 sm:h-20 px-4 sm:px-6 flex items-center justify-between border-b border-slate-100 shrink-0 z-30">
+            <div class="flex items-center gap-4">
+                <a href="/admin/proker" class="p-2 text-slate-400 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Buat Program Kerja Baru</h1>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 pb-32">
+            
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 max-w-3xl mx-auto shadow-sm animate-fade-in-up">
+                <form action="{{ url_for('admin.tambah_proker') }}" method="POST" class="space-y-6">
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Nama Program Kerja</label>
+                        <input type="text" name="nama_proker" required placeholder="Contoh: Bina Desa HIMATKN 2026" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Status</label>
+                        <select name="status" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition font-semibold text-slate-700">
+                            <option value="planned" selected>📅 Terencana (Planned)</option>
+                            <option value="ongoing">🚀 Berjalan (Ongoing)</option>
+                            <option value="postponed">⏸️ Ditunda (Postponed)</option>
+                            <option value="done">✅ Selesai (Done)</option>
+                            <option value="cancelled">❌ Dibatalkan (Cancelled)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Deskripsi Program</label>
+                        <textarea name="deskripsi" rows="5" required placeholder="Jelaskan secara singkat detail program kerja..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition"></textarea>
+                    </div>
+                    
+                    <div class="border-t border-slate-100 pt-6 flex justify-end gap-3">
+                        <a href="/admin/proker" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-sm">Batal</a>
+                        <button type="submit" class="px-8 py-3 bg-primary-900 hover:bg-primary-950 text-white font-bold rounded-xl transition font-mono uppercase text-xs tracking-widest shadow-md">Simpan Program</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

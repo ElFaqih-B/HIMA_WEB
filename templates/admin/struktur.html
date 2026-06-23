@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    {% include 'components/admin_head.html' %}
+</head>
+<body class="bg-slate-50 text-slate-800 flex h-[100dvh] overflow-hidden font-sans relative">
+    
+    {% include 'components/admin_sidebar.html' %}
+    
+    <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-slate-50/50">
+        
+        <header class="bg-white px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between border-b border-slate-100 shrink-0 z-30">
+            <div class="flex items-center flex-1">
+                <button id="menu-toggle-btn" class="md:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-50 mr-3">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Manajemen Pengurus</h1>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 pb-32 space-y-6">
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in-up">
+                <a href="/admin/struktur/tambah" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary-900 hover:bg-primary-950 text-white font-bold rounded-xl shadow-sm transition active:scale-95 text-sm uppercase tracking-widest font-mono">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                    Buat Pengurus
+                </a>
+
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <div class="relative w-full sm:w-64">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        </span>
+                        <input type="text" id="searchInput" placeholder="Cari nama pengurus..." class="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-900 outline-none transition">
+                    </div>
+                    <select id="filterDivisi" class="w-full sm:w-48 px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-900 outline-none transition font-semibold text-slate-700 cursor-pointer">
+                        <option value="">Semua Divisi</option>
+                        <option value="Badan Pengurus Harian (BPH)">BPH</option>
+                        <option value="Divisi Internal">Divisi Internal</option>
+                        <option value="Divisi Eksternal">Divisi Eksternal</option>
+                        <option value="Divisi Keuangan">Divisi Keuangan</option>
+                        <option value="Divisi Minfo">Divisi Minfo</option>
+                        <option value="Divisi Minat dan Bakat">Divisi Minat dan Bakat</option>
+                        <option value="Divisi Reaksi">Divisi Reaksi</option>
+                        <option value="Divisi Sosmas">Divisi Sosmas</option>
+                        <option value="Pembimbing">Pembimbing</option>
+                    </select>
+                    <select id="sortSelect" class="w-full sm:w-48 px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-900 outline-none transition font-semibold text-slate-700 cursor-pointer">
+                        <option value="newest">Terbaru Ditambah</option>
+                        <option value="oldest">Terlama Ditambah</option>
+                        <option value="az">Nama (A - Z)</option>
+                        <option value="za">Nama (Z - A)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden animate-fade-in-up" style="animation-delay: 100ms;">
+                <div class="px-5 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                    <h2 class="text-sm font-bold uppercase tracking-wider font-mono text-slate-800">Daftar Fungsionaris</h2>
+                    <span id="totalCount" class="text-xs font-mono text-slate-400 font-bold"></span>
+                </div>
+                
+                <div class="divide-y divide-slate-100" id="dataContainer">
+                    {% for person in struktur_list %}
+                    <div class="p-4 flex flex-col sm:flex-row gap-4 hover:bg-slate-50 transition data-item"
+                         data-title="{{ person.nama | lower }}"
+                         data-divisi="{{ person.divisi }}"
+                         data-id="{{ person.id }}">
+                        
+                        <div class="w-12 h-12 rounded-full overflow-hidden border border-slate-200 shrink-0 bg-slate-50 mx-auto sm:mx-0">
+                            <img src="{{ person.foto_url if person.foto_url else '/static/img/default-avatar.png' }}" class="w-full h-full object-cover grayscale" loading="lazy">
+                        </div>
+                        
+                        <div class="flex-1 min-w-0 flex flex-col justify-center text-center sm:text-left">
+                            <p class="font-bold text-slate-900 text-base">{{ person.nama }}</p>
+                            <p class="text-xs font-mono text-primary-900 mt-1">{{ person.jabatan }} — {{ person.divisi }}</p>
+                            <p class="text-[10px] font-mono text-slate-400 mt-1">Periode: {{ person.periode }}</p>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 shrink-0 border-t sm:border-t-0 border-slate-100 pt-3 sm:pt-0 mt-2 sm:mt-0 w-full sm:w-auto">
+                            <a href="{{ url_for('admin.edit_struktur_view', id=person.id) }}" class="flex-1 sm:flex-none text-center px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition text-xs">Edit</a>
+                            
+                            <form action="{{ url_for('admin.delete_struktur', id=person.id) }}" method="POST" class="m-0 flex-1 sm:flex-none" onsubmit="return confirm('Yakin hapus pengurus ini?')">
+                                <button type="submit" class="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-100 hover:bg-red-600 hover:text-white font-bold rounded-xl transition text-xs">Hapus</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="p-12 text-center text-slate-400 font-mono text-xs uppercase tracking-widest font-bold empty-state">Belum ada pengurus.</div>
+                    {% endfor %}
+                </div>
+
+                <div id="emptySearch" class="hidden p-12 text-center text-slate-400 font-mono text-xs uppercase tracking-widest font-bold">
+                    Tidak ada hasil yang cocok.
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput   = document.getElementById('searchInput');
+            const sortSelect    = document.getElementById('sortSelect');
+            const filterDivisi  = document.getElementById('filterDivisi');
+            const container     = document.getElementById('dataContainer');
+            const emptySearch   = document.getElementById('emptySearch');
+            const totalCount    = document.getElementById('totalCount');
+            const items         = Array.from(container.querySelectorAll('.data-item'));
+
+            function updateView() {
+                const term      = searchInput.value.toLowerCase();
+                const sortType  = sortSelect.value;
+                const divisiVal = filterDivisi.value;
+
+                let visibleItems = items.filter(item => {
+                    const matchName   = item.getAttribute('data-title').includes(term);
+                    const matchDivisi = divisiVal === '' || item.getAttribute('data-divisi') === divisiVal;
+                    const visible     = matchName && matchDivisi;
+                    item.style.display = visible ? 'flex' : 'none';
+                    return visible;
+                });
+
+                visibleItems.sort((a, b) => {
+                    const titleA = a.getAttribute('data-title');
+                    const titleB = b.getAttribute('data-title');
+                    const idA    = parseInt(a.getAttribute('data-id'));
+                    const idB    = parseInt(b.getAttribute('data-id'));
+
+                    if (sortType === 'az')     return titleA.localeCompare(titleB);
+                    if (sortType === 'za')     return titleB.localeCompare(titleA);
+                    if (sortType === 'oldest') return idA - idB;
+                    return idB - idA;
+                });
+
+                visibleItems.forEach(item => container.appendChild(item));
+
+                totalCount.textContent = visibleItems.length + ' pengurus';
+                emptySearch.classList.toggle('hidden', visibleItems.length > 0);
+            }
+
+            searchInput.addEventListener('input', updateView);
+            sortSelect.addEventListener('change', updateView);
+            filterDivisi.addEventListener('change', updateView);
+
+            // Inisialisasi counter
+            updateView();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Pengurus - Admin</title>
+    {% include 'components/font.html' %}
+</head>
+<body class="bg-slate-50 text-slate-800 flex h-[100dvh] overflow-hidden font-sans relative">
+    
+    {% include 'components/admin_sidebar.html' %}
+
+    <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-slate-50/50">
+        
+        <header class="bg-white h-16 sm:h-20 px-4 sm:px-6 flex items-center justify-between border-b border-slate-100 shrink-0 z-30">
+            <div class="flex items-center gap-4">
+                <a href="/admin/struktur" class="p-2 text-slate-400 hover:text-slate-700 bg-slate-50 hover:bg-slate-100 rounded-lg transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+                <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">Edit Data Fungsionaris</h1>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 pb-32">
+            
+            <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 max-w-3xl mx-auto shadow-sm animate-fade-in-up">
+                <form action="{{ url_for('admin.update_struktur', id=person.id) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Nama Lengkap</label>
+                            <input type="text" name="nama" value="{{ person.nama }}" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Periode Kepengurusan</label>
+                            <select name="periode" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition font-mono font-semibold text-slate-700 cursor-pointer">
+                                <option value="2025/2026" {% if person.periode == '2025/2026' %}selected{% endif %}>2025/2026</option>
+                                <option value="2026/2027" {% if person.periode == '2026/2027' %}selected{% endif %}>2026/2027</option>
+                                <option value="2027/2028" {% if person.periode == '2027/2028' %}selected{% endif %}>2027/2028</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Divisi</label>
+                            <select name="divisi" id="divisiSelect" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition font-semibold text-slate-700 cursor-pointer">
+                                <option value="Badan Pengurus Harian (BPH)" {% if person.divisi == 'Badan Pengurus Harian (BPH)' %}selected{% endif %}>Badan Pengurus Harian (BPH)</option>
+                                <option value="Divisi Internal" {% if person.divisi == 'Divisi Internal' %}selected{% endif %}>Divisi Internal</option>
+                                <option value="Divisi Eksternal" {% if person.divisi == 'Divisi Eksternal' %}selected{% endif %}>Divisi Eksternal</option>
+                                <option value="Divisi Keuangan" {% if person.divisi == 'Divisi Keuangan' %}selected{% endif %}>Divisi Keuangan</option>
+                                <option value="Divisi Minfo" {% if person.divisi == 'Divisi Minfo' %}selected{% endif %}>Divisi Minfo (Media & Informasi)</option>
+                                <option value="Divisi Minat dan Bakat" {% if person.divisi == 'Divisi Minat dan Bakat' %}selected{% endif %}>Divisi Minat dan Bakat</option>
+                                <option value="Divisi Reaksi" {% if person.divisi == 'Divisi Reaksi' %}selected{% endif %}>Divisi Reaksi</option>
+                                <option value="Divisi Sosmas" {% if person.divisi == 'Divisi Sosmas' %}selected{% endif %}>Divisi Sosmas</option>
+                                <option value="Pembimbing" {% if person.divisi == 'Pembimbing' %}selected{% endif %}>Pembimbing</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Jabatan</label>
+                            <select name="jabatan" id="jabatanSelect" required class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-900 text-sm outline-none transition font-semibold text-slate-700 cursor-pointer">
+                                <!-- Dirender dinamis oleh JS -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+                        <img src="{{ person.foto_url if person.foto_url else '/static/img/default-avatar.png' }}" class="w-16 h-16 rounded-full object-cover border border-slate-300 shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 font-mono">Ganti Foto (Opsional)</label>
+                            <input type="file" name="foto_pengurus" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-white file:text-slate-700 hover:file:bg-slate-100 cursor-pointer">
+                            <p class="text-[10px] text-slate-400 mt-1 truncate">Kosongkan jika tidak ingin mengubah foto saat ini.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-slate-100 pt-6 flex justify-end gap-3">
+                        <a href="/admin/struktur" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-sm">Batal</a>
+                        <button type="submit" class="px-8 py-3 bg-primary-900 hover:bg-primary-950 text-white font-bold rounded-xl transition font-mono uppercase text-xs tracking-widest shadow-md">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const jabatanOptions = {
+            'Badan Pengurus Harian (BPH)': [
+                'Ketua Himpunan',
+                'Wakil Ketua Himpunan',
+                'Sekretaris I',
+                'Sekretaris II',
+                'Bendahara I',
+                'Bendahara II',
+            ],
+            'Pembimbing': [
+                'Dosen Pembimbing',
+            ],
+            '_default': [
+                'Kepala Divisi',
+                'Sekretaris Divisi',
+                'Anggota',
+            ]
+        };
+
+        // Gunakan tojson agar aman dari karakter kutip di dalam nama jabatan
+        const currentJabatan = {{ person.jabatan | tojson }};
+        const divisiSelect   = document.getElementById('divisiSelect');
+        const jabatanSelect  = document.getElementById('jabatanSelect');
+
+        function renderJabatan(divisi, selected) {
+            const opts = jabatanOptions[divisi] || jabatanOptions['_default'];
+            jabatanSelect.innerHTML = '';
+            opts.forEach(j => {
+                const opt = document.createElement('option');
+                opt.value = j;
+                opt.textContent = j;
+                if (j === selected) opt.selected = true;
+                jabatanSelect.appendChild(opt);
+            });
+        }
+
+        // Render on load dengan nilai dari DB
+        renderJabatan(divisiSelect.value, currentJabatan);
+
+        // Re-render saat divisi diganti, reset jabatan ke pilihan pertama
+        divisiSelect.addEventListener('change', () => renderJabatan(divisiSelect.value, null));
+    </script>
+</body>
+</html>
