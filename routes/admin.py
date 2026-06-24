@@ -451,3 +451,5 @@ def update_hero():
             pass
             
     return redirect(url_for('admin.admin_pengaturan'))
+
+# untuk update teks pada website
